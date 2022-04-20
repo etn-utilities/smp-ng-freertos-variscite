@@ -85,11 +85,23 @@ void MU_SendMsg(MU_Type *base, uint32_t regIndex, uint32_t msg)
 {
     assert(regIndex < MU_TR_COUNT);
 
+#if 0
     /* Wait TX register to be empty. */
     while (0U == (base->SR & (((uint32_t)kMU_Tx0EmptyFlag) >> regIndex)))
     {
         ; /* Intentional empty while*/
     }
+#else
+    // Don't block
+    // We can do this in the DA3050 because the message payload "msg" is 
+    // always the same. The message is only use as a notification of
+    // available data. If a message is already pending, the consumer
+    // when called back will read all the messages in the rpmsg ring buffer.
+    if (0U == (base->SR & (((uint32_t)kMU_Tx0EmptyFlag) >> regIndex)))
+    {
+        return;
+    }
+#endif
 
     base->TR[regIndex] = msg;
 }
