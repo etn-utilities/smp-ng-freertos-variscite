@@ -450,7 +450,7 @@ void env_release_sync_lock(void *lock)
  */
 void env_sleep_msec(uint32_t num_msec)
 {
-    vTaskDelay(num_msec / portTICK_PERIOD_MS);
+    vTaskDelay(portMSEC_TO_TICK(num_msec));
 }
 
 /*!
@@ -637,7 +637,7 @@ int32_t env_put_queue(void *queue, void *msg, uint32_t timeout_ms)
     }
     else
     {
-        if (xQueueSend(queue, msg, ((portMAX_DELAY == timeout_ms) ? portMAX_DELAY : timeout_ms / portTICK_PERIOD_MS)) ==
+        if (xQueueSend(queue, msg, ((portMAX_DELAY == timeout_ms) ? portMAX_DELAY : portMSEC_TO_TICK(timeout_ms))) ==
             pdPASS)
         {
             return 1;
@@ -672,7 +672,7 @@ int32_t env_get_queue(void *queue, void *msg, uint32_t timeout_ms)
     else
     {
         if (xQueueReceive(queue, msg,
-                          ((portMAX_DELAY == timeout_ms) ? portMAX_DELAY : timeout_ms / portTICK_PERIOD_MS)) == pdPASS)
+                          ((portMAX_DELAY == timeout_ms) ? portMAX_DELAY : portMSEC_TO_TICK(timeout_ms))) == pdPASS)
         {
             return 1;
         }
