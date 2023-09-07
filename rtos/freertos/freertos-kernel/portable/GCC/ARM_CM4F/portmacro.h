@@ -73,6 +73,7 @@
 /* Architecture specifics. */
     #define portSTACK_GROWTH      ( -1 )
     #define portTICK_PERIOD_MS    ( ( TickType_t ) 1000 / configTICK_RATE_HZ )
+    #define portMSEC_TO_TICK(MS)  ( (configTICK_RATE_HZ > 1000) ? (TickType_t)MS * (configTICK_RATE_HZ / 1000) : (TickType_t)MS / ( 1000 / configTICK_RATE_HZ ) )
     #define portBYTE_ALIGNMENT    8
     #define portDONT_DISCARD      __attribute__( ( used ) )
 /*-----------------------------------------------------------*/
